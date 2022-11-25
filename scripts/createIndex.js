@@ -19,7 +19,15 @@ const createIndexFile = (content, directory) => {
   return writeFile(`./src/${directory}/index.ts`, content);
 };
 
-['components', 'hooks', 'icons', 'screens'].map((directory) => {
+[
+  'components',
+  'hooks',
+  'icons',
+  'screens',
+  'types',
+  'contexts',
+  'providers',
+].map((directory) => {
   readdir(`./src/${directory}`)
     .then(clearPaths)
     .then(createFileContent)

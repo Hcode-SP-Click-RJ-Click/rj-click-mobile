@@ -1,5 +1,6 @@
 export const ColorsDark = {
   primary: '#002FF7',
+  primaryConstrast: '',
   theme: '#111',
   themeContrast: '#fff',
 };

@@ -1,2 +1,2 @@
-export * from './HeartOutlined';
+export * from './HeartOutlinedIcon';
 export * from './StarIcon';

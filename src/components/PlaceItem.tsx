@@ -3,8 +3,9 @@ import { useTabNavigation } from '../hooks/useTabNavigation';
 import { StarIcon } from '../icons/StarIcon';
 import { Screen } from '../routes';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
+import { PlaceType } from '../types';
 
 const Wrap = styled.TouchableOpacity`
   height: 200px,
@@ -77,14 +78,19 @@ export type PlaceItemButtonProps = {
 export type PlaceItemProps = {
   style?: StyleProp<ViewStyle>;
   buttons?: PlaceItemButtonProps[];
+  data: PlaceType;
 };
 
-export const PlaceItem = ({ buttons, style }: PlaceItemProps) => {
+export const PlaceItem = ({ buttons, style, data }: PlaceItemProps) => {
   const { navigate } = useTabNavigation();
+  const [place, setPlace] = useState(data);
+
+  useEffect(() => setPlace(data), [data]);
+
   return (
     <Wrap style={style} onPress={() => navigate(Screen.Favorites)}>
       <PlaceImage
-        source={require('./../assets/maracana.jpg')}
+        source={{ uri: place.photo }}
         imageStyle={{ borderRadius: 10 }}
       >
         <PlaceOverlay
@@ -92,11 +98,11 @@ export const PlaceItem = ({ buttons, style }: PlaceItemProps) => {
           start={{ x: 0, y: 0.4 }}
           end={{ x: 0, y: 0.8 }}
         />
-        <PlaceTitle>Maracanã</PlaceTitle>
-        <PlaceSubTitle>Um dos estádios mais famosos do mundo.</PlaceSubTitle>
+        <PlaceTitle>{place.title}</PlaceTitle>
+        <PlaceSubTitle>{place.subtitle}</PlaceSubTitle>
         <PlaceRating>
           <StarIcon width={16} height={16} />
-          <PlaceRatingValue>5.0</PlaceRatingValue>
+          <PlaceRatingValue>{place.rating.toPrecision(2)}</PlaceRatingValue>
         </PlaceRating>
         <Buttons>
           {(buttons ?? []).map(({ onPress, icon }, index) => (
