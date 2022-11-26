@@ -1,17 +1,28 @@
 import styled from '@emotion/native';
+import { PlaceList } from '../components';
+import { HeaderBar } from '../components/HeaderBar';
+import { ScreenWrap } from '../components/ScreenWrap';
+import { TrashIcon } from '../icons/TrashIcon';
 
-const Wrap = styled.View`
-  padding-top: 30px;
-  align-items: center;
+const FavoritesPlaceList = styled(PlaceList)`
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 15px;
 `;
-const Title = styled.Text``;
 
 export type FavoritesScreenProps = {};
 
 export const FavoritesScreen = ({}: FavoritesScreenProps) => {
   return (
-    <Wrap>
-      <Title>Favorites Screen</Title>
-    </Wrap>
+    <ScreenWrap>
+      <HeaderBar title="Favoritos" />
+      <FavoritesPlaceList
+        buttons={[
+          {
+            children: <TrashIcon width={24} height={24} />,
+          },
+        ]}
+      />
+    </ScreenWrap>
   );
 };

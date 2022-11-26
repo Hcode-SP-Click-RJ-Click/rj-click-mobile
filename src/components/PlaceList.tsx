@@ -1,10 +1,10 @@
 import styled from '@emotion/native';
-import { HeartOutlinedIcon } from '../icons/HeartOutlinedIcon';
 import { PlaceItem } from './PlaceItem';
 import { StyleProp, ViewStyle } from 'react-native';
 import { useState, useEffect } from 'react';
 import { CategoryType, PlaceType } from '../types';
 import { placeListData } from '../data';
+import { ButtonIconProps } from './ButtonIcon';
 
 const Wrap = styled.ScrollView`
   flex: 1;
@@ -14,13 +14,19 @@ const Wrap = styled.ScrollView`
 const PlaceListItem = styled(PlaceItem)`
   margin-bottom: 20px;
 `;
-
 export type PlaceListProps = {
   style?: StyleProp<ViewStyle>;
-  selectedCategory: CategoryType | null;
+  selectedCategory?: CategoryType | null;
+  buttons?: ButtonIconProps[];
+  withPositions?: boolean;
 };
 
-export const PlaceList = ({ style, selectedCategory }: PlaceListProps) => {
+export const PlaceList = ({
+  style,
+  selectedCategory = null,
+  buttons,
+  withPositions = false,
+}: PlaceListProps) => {
   const [items, setItems] = useState<PlaceType[]>(placeListData);
 
   useEffect(() => {
@@ -37,16 +43,12 @@ export const PlaceList = ({ style, selectedCategory }: PlaceListProps) => {
 
   return (
     <Wrap style={style}>
-      {items.map((item) => (
+      {items.map((item, index) => (
         <PlaceListItem
           key={item.id}
           data={item}
-          buttons={[
-            {
-              icon: <HeartOutlinedIcon width={24} height={24} />,
-              onPress: () => console.log('Favorito 1'),
-            },
-          ]}
+          buttons={buttons}
+          position={withPositions ? index + 1 : undefined}
         />
       ))}
     </Wrap>

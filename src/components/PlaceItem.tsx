@@ -1,11 +1,13 @@
 import styled from '@emotion/native';
 import { useTabNavigation } from '../hooks/useTabNavigation';
 import { StarIcon } from '../icons/StarIcon';
-import { Screen } from '../routes';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ReactNode, useEffect, useState } from 'react';
-import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 import { PlaceType } from '../types';
+import { usePlace } from '../hooks/usePlace';
+import { ButtonIcon, ButtonIconProps } from './ButtonIcon';
+import { Colors } from '../values/colors';
 
 const Wrap = styled.TouchableOpacity`
   height: 200px,
@@ -18,7 +20,7 @@ const PlaceImage = styled.ImageBackground`
 `;
 
 const PlaceTitle = styled.Text`
-  font-size: 30px;
+  font-size: 25px;
   color: #fff;
   position: absolute;
   left: 15px;
@@ -53,16 +55,6 @@ const PlaceOverlay = styled(LinearGradient)`
   border-bottom-right-radius: 10px;
 `;
 
-const Button = styled.TouchableOpacity`
-  background-color: #ffffff99;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 18px;
-  margin-left: 10px;
-`;
-
 const Buttons = styled.View`
   position: absolute;
   right: 15px;
@@ -70,25 +62,45 @@ const Buttons = styled.View`
   flex-direction: row;
 `;
 
-export type PlaceItemButtonProps = {
-  icon: ReactNode;
-  onPress?: (event: GestureResponderEvent) => void;
-};
+const PlaceButtonIcon = styled(ButtonIcon)`
+  background-color: #ffffff99;
+`;
+
+const Position = styled.Text`
+  background-color: ${Colors.primary};
+  color: #fff;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 47px;
+  height: 32px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  text-align: center;
+  line-height: 32px;
+`;
 
 export type PlaceItemProps = {
   style?: StyleProp<ViewStyle>;
-  buttons?: PlaceItemButtonProps[];
+  buttons?: ButtonIconProps[];
   data: PlaceType;
+  position?: number;
 };
 
-export const PlaceItem = ({ buttons, style, data }: PlaceItemProps) => {
+export const PlaceItem = ({
+  buttons,
+  style,
+  data,
+  position,
+}: PlaceItemProps) => {
+  const { open } = usePlace();
   const { navigate } = useTabNavigation();
   const [place, setPlace] = useState(data);
 
   useEffect(() => setPlace(data), [data]);
 
   return (
-    <Wrap style={style} onPress={() => navigate(Screen.Favorites)}>
+    <Wrap style={style} onPress={() => open(place.id)}>
       <PlaceImage
         source={{ uri: place.photo }}
         imageStyle={{ borderRadius: 10 }}
@@ -105,12 +117,13 @@ export const PlaceItem = ({ buttons, style, data }: PlaceItemProps) => {
           <PlaceRatingValue>{place.rating.toPrecision(2)}</PlaceRatingValue>
         </PlaceRating>
         <Buttons>
-          {(buttons ?? []).map(({ onPress, icon }, index) => (
-            <Button key={index} onPress={onPress}>
-              {icon}
-            </Button>
+          {(buttons ?? []).map((button, index) => (
+            <PlaceButtonIcon key={index} {...button}>
+              {button.children}
+            </PlaceButtonIcon>
           ))}
         </Buttons>
+        {position && <Position>{position}°</Position>}
       </PlaceImage>
     </Wrap>
   );

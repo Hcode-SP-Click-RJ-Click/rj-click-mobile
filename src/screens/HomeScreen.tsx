@@ -4,16 +4,9 @@ import { CategoryList } from '../components';
 import { PlaceList } from '../components/PlaceList';
 import { CategoryType } from '../types';
 import { Colors } from '../values/colors';
-import { useState, useEffect } from 'react';
-
-const Wrap = styled.View`
-  flex: 1;
-  background-color: ${Colors.theme};
-  align-items: center;
-  justify-content: center;
-  padding-top: 30px;
-  padding-bottom: 0;
-`;
+import { useState } from 'react';
+import { ScreenWrap } from '../components/ScreenWrap';
+import { HeartOutlinedIcon } from '../icons';
 
 const Title = styled.Text`
   font-size: 24px;
@@ -40,16 +33,21 @@ export const HomeScreen = ({}: HomeScreenProps) => {
     null
   );
 
-  useEffect(() => console.log({ selectedCategory }), [selectedCategory]);
-
   return (
-    <Wrap>
+    <ScreenWrap>
       <Title>Descubra lugares incríveis!</Title>
       <CategoryListWrap>
         <CategoryList onChange={(category) => setSelectedCategory(category)} />
       </CategoryListWrap>
-      <HomePlaceList selectedCategory={selectedCategory} />
+      <HomePlaceList
+        selectedCategory={selectedCategory}
+        buttons={[
+          {
+            children: <HeartOutlinedIcon width={24} height={24} />,
+          },
+        ]}
+      />
       <StatusBar style="light" />
-    </Wrap>
+    </ScreenWrap>
   );
 };
